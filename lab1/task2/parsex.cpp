@@ -565,13 +565,21 @@ hash_t operator+(hash_t const& lhs,
     return result;
 }
 
+static inline hash_t hash_from_size_t(size_t res)
+{
+    hash_t h;
+    for (auto&& hi : h)
+        hi = res;
+    return h;
+}
+
 static inline hash_t hash_op(ast_expression::operation const& op)
 {
-    static prime_v const P{64603473, 60221149, 31, 37};
-    static thread_local vector<prime_v> p_pows(1, {1, 1, 1, 1});
+    static prime_v const P{64603473};
+    static thread_local vector<prime_v> p_pows(1, hash_from_size_t(1));
 
     size_t h0 = hash<char const*>()(to_string(op.op_type)); // too sleepy to write smth effecient..
-    hash_t h{h0, h0};
+    hash_t h = hash_from_size_t(h0);
     size_t i = 1;
     for (auto&& child : op.argv)
     {
@@ -598,11 +606,6 @@ static inline size_t calc_subtree_sz(ast_expression::operation const& op)
         ans += child->subtree_sz;
     }
     return ans;
-}
-
-static inline hash_t hash_from_size_t(size_t res)
-{
-    return {res, res, res, res};
 }
 
 ast_expression::ast_expression(ast_expression::operation &&op)

@@ -43,7 +43,7 @@ struct reader_impl
 
 enum
 {
-    hash_n = 4
+    hash_n = 1
 };
 
 
