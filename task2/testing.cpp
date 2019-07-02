@@ -225,6 +225,7 @@ int main()
     id = 0;
     while (!eof(rdr))
     {
+    	id++;
         auto expr = parse_expr(rdr);
         auto* ptr = expr.get();
         auto ast_record_ptr = make_unique<ast_record>(move(expr));
@@ -270,6 +271,7 @@ int main()
             if (!modus_ponens_found)
             {
                 cout << "Proof is incorrect" << endl;
+		cout << "Line: " << id << endl;
                 return 0;
             }
         }
@@ -298,7 +300,9 @@ int main()
 
         if (!inserted)
         {
-            expressions_order.pop_back();
+	    // uncomment  to get productive code
+	    // comment    for convenient checking
+            // expressions_order.pop_back();
         }
     }
 
@@ -307,6 +311,7 @@ int main()
      || expressions_order.back()->hashcode != result->hashcode)
     {
         cout << "Proof is incorrect" << endl;
+	cout << "Incorrect last expression" << endl;
         return 0;
     }
 
